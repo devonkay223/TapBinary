@@ -2,22 +2,27 @@
 
 //let song;
 let data =[];
+let volhistory = [];
 let source = null;
 let fft = null;
 let level = null;
-let volhistory = [];
-let button;
-let Silence = 0.07;
+let noise = null;
 let listening = false;
 let analyzed = true;
 let trans = false;
-let binOut = "";
 let total = 0.0;
-let noise = null;
 let circleFill = 'black';
+//Output strings
 let sentence = "";
-let threshold = 0.5; // sets midway threshold between 'loud' and 'quiet' noise
+let binOut = "";
 let transbin = "";
+// Audio Vars
+let Silence = 0.07;
+let threshold = 0.5; // sets midway threshold between 'loud' and 'quiet' noise
+//Buttons 
+let button;
+//Styling
+let font = 'Overpass';
 
 //GUI
 // let myColor = '#FFFFFF';
@@ -32,6 +37,11 @@ let transbin = "";
  //function touchStarted() {
 //   getAudioContext().resume();
  //}
+ // HOW DO WE LOAD A FONT TO USE FOR TEXT?
+//  function preload() {
+//   Overpass = loadFont('https://fonts.googleapis.com/css?family=Overpass&display=swap');
+// }
+
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
@@ -40,7 +50,13 @@ function setup() {
     // start the Audio Input.
  // By default, it does not .connect() (to the computer speakers)
   button = createButton('Record');
-  fill(255);
+  button.style('background-color', '#000000');
+  button.style('font-size', '2em');
+  button.style('font-family', font);
+  button.style('color', '#ffffff');
+  button.style('border-width', 'thick');
+  button.style('border-color', '#ffffff');
+  button.position(window.innerWidth - 150,50); //should this be scalable for devices?
   button.mousePressed(toggleRecord);
 
   source.start();
@@ -69,6 +85,7 @@ function toggleRecord(){
   if (listening) {
       listening = false;
       source.stop();
+      button.html("Record");
       // if(canTrans()){ //************
       //   print(getText());//************
       // } else {//************
@@ -78,6 +95,7 @@ function toggleRecord(){
   else {
     listening = true;
     source.start();
+    button.html("Stop");
   }
 }
 
@@ -87,13 +105,12 @@ function draw(){
   drawCircAmp();
   drawAmphistory();
   recordData();
+  fill('#FFFFFF');
   textSize(32);
   text(binOut,50,50);
   fill('#FFFFFF');
-  textSize(32);
-  text(sentence,50, 90);
-  fill('#FFFFFF');
-
+  textSize(32); //not scalable
+  text(sentence,50,90);
 }
 
 function drawWaveForm() {
