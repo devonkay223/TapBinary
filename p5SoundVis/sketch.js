@@ -54,7 +54,7 @@ function setup() {
   button.style('font-size', '2em');
   button.style('font-family', font);
   button.style('color', '#ffffff');
-  button.style('border-width', 'thick');
+  // button.style('border-width', 'thick');
   button.style('border-color', '#ffffff');
   button.position(window.innerWidth - 150,50); //should this be scalable for devices?
   button.mousePressed(toggleRecord);
@@ -86,11 +86,6 @@ function toggleRecord(){
       listening = false;
       source.stop();
       button.html("Record");
-      // if(canTrans()){ //************
-      //   print(getText());//************
-      // } else {//************
-      //   print("Cannot be translated");//************
-      // }
   }
   else {
     listening = true;
@@ -176,40 +171,11 @@ function recordData(){
   }
 }
 
-// function canTrans(){//************
-//     trans = false;
-//     // if (binOut.length % 8 === 0) {//make this second check
-//     //     trans = true;//************
-//     // }
-//     // // SHANNON: truncation of binary string when 'end record' was pushed occurs here, is there a reason for it? 
-//     // else {
-//       if (transbin.length == 8){ //Make this first check
-//         //transbin = binOut.replace(binOut.substring(0, binOut.length - 8),"")
-//         trans = true;
-//       }
-//       // while (binOut.length % 8 != 0) { //make this third check
-//       //   binOut = '0'+ binOut //make every attempt at analyzation work without manipulating decimal value
-//       //   print('padding' + binOut.length)
-//       // }
-//       // trans = true;
-//     // }
-//     return trans;//************
-// }
 
 function getText(){
   let addedlet = "";
-  // for (let i =0; i < trans; i+=8){
-  //   let str = binOut.substring(i, i+8);
-  //   let num = parseInt(str,2)
-  //   print('num' + num)
-  //   word += char(num);
-  //   print('word'+ word);
-  // }
-  //print('transbin:' + transbin)
   let num = parseInt(transbin,10)
-  //print('num' + num)
   addedlet += char(num);
-  //print('word'+ addedlet);
   sentence += addedlet;
   transbin = "";
   trans = false;
@@ -240,7 +206,6 @@ function analyzeNoise(){
   }
   total = 0
   if (transbin.length == 8){
-    // print(trans);
     getText();
   }
 }
