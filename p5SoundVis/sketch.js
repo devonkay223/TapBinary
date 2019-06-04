@@ -16,13 +16,26 @@ let circleFill = 'black';
 let sentence = "";
 let binOut = "";
 let transbin = "";
-// Audio Vars
+//Audio Vars
 let Silence = 0.07;
 let threshold = 0.5; // sets midway threshold between 'loud' and 'quiet' noise
 //Buttons 
 let button;
 //Styling
 let font = 'Overpass';
+//Buttons
+var recordButton;
+var stopButton;
+var resetButton;
+//Button Constraints
+let bRight = 0;
+let bRight1 = 0; 
+let bRight2 = 0;
+let bRight3 = 0;
+let btop = 0;
+let bHeight = 0;
+let bPad = 0;
+
 
 //GUI
 // let myColor = '#FFFFFF';
@@ -44,40 +57,45 @@ let font = 'Overpass';
 
 
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight);
+  var cnv = createCanvas(window.innerWidth, window.innerHeight);
+  cnv.style('vertical-align', 'top');
   // Create an Audio input
   source = new p5.AudioIn();
     // start the Audio Input.
  // By default, it does not .connect() (to the computer speakers)
-  button = createButton('Record');
-  button.style('background-color', '#000000');
-  button.style('font-size', '2em');
-  button.style('font-family', font);
-  button.style('color', '#ffffff');
-  button.style('border-color', '#ffffff');
-  button.position(window.innerWidth - 150,50); //should this be scalable for devices?
-  // if ((mouseX > window.innerWidth - 150) && (mouseX < window.innerWidth) && (mouseY > 50) && (mouseY < 100)){
-  //   toggleRecord();
-  // }
 
-  button = createButton('Stop');
-  button.style('background-color', '#000000');
-  button.style('font-size', '2em');
-  button.style('font-family', font);
-  button.style('color', '#ffffff');
-  button.style('border-color', '#ffffff');
-  button.position(window.innerWidth - 150,120); //should this be scalable for devices?
+  textHeight = height/40;
+  bRight = width - (width/50);
+  btop = height/45;
 
-  button = createButton('Reset');
-  button.style('background-color', '#000000');
-  button.style('font-size', '2em');
-  button.style('font-family', font);
-  button.style('color', '#ffffff');
-  button.style('border-color', '#ffffff');
-  button.position(window.innerWidth - 150,190); //should this be scalable for devices?
-  // if ((mouseX > window.innerWidth - 150) && (mouseX < window.innerWidth) && (mouseY > 120) && (mouseY < 170)){
-  //   button.mousePressed(toggleReset);
-  // }
+  recordButton = createButton('Record');
+  recordButton.style('background-color', '#000000');
+  recordButton.style('font-size', textHeight);
+  recordButton.style('font-family', font);
+  recordButton.style('color', '#ffffff');
+  recordButton.style('border-color', '#ffffff');
+  bHeight = recordButton.size().height;
+  bPad = bHeight/6;
+  bRight1 = bRight - recordButton.size().width;
+  recordButton.position(bRight1, btop);
+
+  stopButton = createButton('Stop');
+  stopButton.style('background-color', '#000000');
+  stopButton.style('font-size', textHeight);
+  stopButton.style('font-family', font);
+  stopButton.style('color', '#ffffff');
+  stopButton.style('border-color', '#ffffff');
+  bRight2 = bRight - stopButton.size().width;
+  stopButton.position(bRight2, btop + bHeight + bPad);
+
+  resetButton = createButton('Reset');
+  resetButton.style('background-color', '#000000');
+  resetButton.style('font-size', textHeight);
+  resetButton.style('font-family', font);
+  resetButton.style('color', '#ffffff');
+  resetButton.style('border-color', '#ffffff');
+  bRight3 = bRight - resetButton.size().width;
+  resetButton.position(bRight3, btop + 2*(bHeight + bPad)); 
 
   source.start();
   // // create a new Amplitude analyzer
@@ -116,18 +134,23 @@ function toggleStop(){
 }
 
 function toggleReset(){
-  setup();
-  draw();
+  toggleStop();
+  binOut = "";
+  sentence = "";
+  for (var i = 0; i < volhistory.length + 10; i++){
+    volhistory.pop();
+  }
 }
 
+
 function mousePressed(){
-  if ((mouseX > window.innerWidth - 150) && (mouseX < window.innerWidth) && (mouseY > 50) && (mouseY < 100)){
+  if ((mouseX > bRight1) && (mouseX < bRight) && (mouseY > btop) && (mouseY < btop + bHeight)){
     toggleRecord();
   }
-  if ((mouseX > window.innerWidth - 150) && (mouseX < window.innerWidth) && (mouseY > 120) && (mouseY < 170)){
+  if ((mouseX > bRight2) && (mouseX < bRight) && (mouseY > (btop + bHeight + bPad)) && (mouseY < (btop + 2*bHeight))){
     toggleStop();
   }
-  if ((mouseX > window.innerWidth - 150) && (mouseX < window.innerWidth) && (mouseY > 190) && (mouseY < 240)){
+  if ((mouseX > bRight3) && (mouseX < bRight) && (mouseY > (btop + 2*(bHeight + bPad)) && (mouseY < (btop + 3*bHeight)))){
     toggleReset();
   }
 }
@@ -170,8 +193,8 @@ function drawCircAmp(){
     let vol = level.getLevel();
     fill(circleFill);
     //beginShape()
-      var y = map(vol,0,1,(height/2)-50,0);
-      ellipse(width/2,height/2,y, y);
+    var y = map(vol,0,1,(height/2)-50,0);
+    ellipse(width/2,height/2,y, y);
     //endShape()
 }
 
@@ -250,6 +273,10 @@ function analyzeNoise(){
 
 function windowResized() {
   resizeCanvas(window.innerWidth, window.innerHeight);
+  recordButton.remove();
+  stopButton.remove();
+  resetButton.remove();
+  setup();
 }
 
 // function keyPressed(e) {
