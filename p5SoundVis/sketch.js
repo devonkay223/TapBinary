@@ -54,10 +54,30 @@ function setup() {
   button.style('font-size', '2em');
   button.style('font-family', font);
   button.style('color', '#ffffff');
-  // button.style('border-width', 'thick');
   button.style('border-color', '#ffffff');
   button.position(window.innerWidth - 150,50); //should this be scalable for devices?
-  button.mousePressed(toggleRecord);
+  // if ((mouseX > window.innerWidth - 150) && (mouseX < window.innerWidth) && (mouseY > 50) && (mouseY < 100)){
+  //   toggleRecord();
+  // }
+
+  button = createButton('Stop');
+  button.style('background-color', '#000000');
+  button.style('font-size', '2em');
+  button.style('font-family', font);
+  button.style('color', '#ffffff');
+  button.style('border-color', '#ffffff');
+  button.position(window.innerWidth - 150,120); //should this be scalable for devices?
+
+  button = createButton('Reset');
+  button.style('background-color', '#000000');
+  button.style('font-size', '2em');
+  button.style('font-family', font);
+  button.style('color', '#ffffff');
+  button.style('border-color', '#ffffff');
+  button.position(window.innerWidth - 150,190); //should this be scalable for devices?
+  // if ((mouseX > window.innerWidth - 150) && (mouseX < window.innerWidth) && (mouseY > 120) && (mouseY < 170)){
+  //   button.mousePressed(toggleReset);
+  // }
 
   source.start();
   // // create a new Amplitude analyzer
@@ -82,15 +102,33 @@ function setup() {
 
 function toggleRecord(){
   getAudioContext().resume();
-  if (listening) {
-      listening = false;
-      source.stop();
-      button.html("Record");
+  if (!listening) {
+      listening = true;
+      source.start();
   }
-  else {
-    listening = true;
-    source.start();
-    button.html("Stop");
+}
+
+function toggleStop(){
+  if(listening){
+    listening = false;
+    source.stop();
+  }
+}
+
+function toggleReset(){
+  setup();
+  draw();
+}
+
+function mousePressed(){
+  if ((mouseX > window.innerWidth - 150) && (mouseX < window.innerWidth) && (mouseY > 50) && (mouseY < 100)){
+    toggleRecord();
+  }
+  if ((mouseX > window.innerWidth - 150) && (mouseX < window.innerWidth) && (mouseY > 120) && (mouseY < 170)){
+    toggleStop();
+  }
+  if ((mouseX > window.innerWidth - 150) && (mouseX < window.innerWidth) && (mouseY > 190) && (mouseY < 240)){
+    toggleReset();
   }
 }
 
